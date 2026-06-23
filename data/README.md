@@ -13,6 +13,6 @@ Historical daily weather observations for London from the European Climate Asses
 | max_temp | Maximum temperature (°C) |
 | mean_temp | Daily mean temperature (°C) — prediction target |
 | min_temp | Minimum temperature (°C) |
-| precipitation | Precipitation (mm) |
+| precipitation_length | Precipitation (mm) |
 | pressure | Sea-level pressure (hPa) |
 | snow_depth | Snow depth (cm) |
