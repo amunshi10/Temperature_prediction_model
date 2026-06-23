@@ -1,83 +1,53 @@
-# Temperature Prediction in London Using ML Models
+# London Temperature Prediction
 
-Predict the daily mean temperature in London using historical weather data and scikit-learn regression pipelines tracked with MLflow.
+A machine learning project that predicts daily mean temperature in London using historical weather data. Multiple regression models are trained and compared using scikit-learn pipelines, with experiment tracking via MLflow.
 
-## Project Structure
+## Overview
+
+- **Dataset:** Historical daily weather records for London (1979–2020)
+- **Target:** Daily mean temperature (°C)
+- **Models:** Ridge, Lasso, Random Forest, Gradient Boosting, SVR
+- **Best RMSE:** ~1.2°C (Gradient Boosting)
+
+## Repository Structure
 
 ```
-.
-├── data/               # Raw CSV data (not committed — see data/README.md)
+├── data/
+│   └── london_weather.csv
 ├── notebooks/
-│   └── temperature_prediction.ipynb   # Full EDA → training → evaluation notebook
+│   └── temperature_prediction.ipynb
 ├── src/
-│   ├── data_preprocessing.py          # Loading, cleaning, feature engineering
-│   ├── models.py                      # sklearn Pipeline definitions
-│   ├── train.py                       # CLI training script with MLflow logging
-│   └── predict.py                     # Load saved model and predict on new data
-├── outputs/            # Saved plots
-├── models/             # Saved model artifacts (.pkl)
-├── requirements.txt
-└── README.md
+│   ├── data_preprocessing.py
+│   ├── models.py
+│   ├── train.py
+│   └── predict.py
+├── outputs/
+├── models/
+└── requirements.txt
 ```
 
-## Setup
+## Features
 
-```bash
-python -m venv .venv
-# Windows
-.venv\Scripts\activate
-# macOS/Linux
-source .venv/bin/activate
+**Time-series feature engineering:**
+- Cyclical encoding of month and day-of-year (sin/cos transforms)
+- Lag features: previous day's temperature, 3-day and 7-day rolling mean
+- Calendar features: year, week of year
 
-pip install -r requirements.txt
-```
-
-## Data
-
-Download [London Weather Data](https://www.kaggle.com/datasets/emmanuelfwerr/london-weather-data) from Kaggle and place `london_weather.csv` in the `data/` folder.
-
-## Run Training
-
-```bash
-python src/train.py --data data/london_weather.csv --output models
-```
-
-This will:
-- Engineer time and lag features
-- Train 5 regression models (Ridge, Lasso, Random Forest, Gradient Boosting, SVR)
-- Log all metrics and artifacts to MLflow
-- Save the best model to `models/best_model.pkl`
-
-## View MLflow UI
-
-```bash
-mlflow ui
-# Open http://127.0.0.1:5000
-```
-
-## Predict on New Data
-
-```bash
-python src/predict.py --model models/best_model.pkl --input data/new_data.csv
-```
-
-## Models Compared
-
-| Model | Notes |
-|-------|-------|
-| Ridge Regression | Strong baseline with L2 regularisation |
-| Lasso Regression | Sparse solution via L1 regularisation |
-| Random Forest | Ensemble of decision trees, captures non-linearity |
-| Gradient Boosting | Sequential boosting, typically best accuracy |
-| SVR (RBF kernel) | Support vector approach for regression |
-
-## Feature Engineering
-
-- **Cyclical encoding** of month and day-of-year (sin/cos) to preserve periodicity
-- **Lag features**: previous day's temperature, 3-day and 7-day rolling mean
-- **Calendar features**: year, week of year
+**Model evaluation:**
+- Time-series aware cross-validation (`TimeSeriesSplit`)
+- Metrics: RMSE, MAE, R²
+- All runs logged to MLflow for reproducibility
 
 ## Results
 
-Run `mlflow ui` after training to compare all experiments interactively.  
-Key plots are saved to `outputs/` after running the notebook.
+| Model | Test RMSE | Test MAE | R² |
+|-------|-----------|----------|----|
+| Gradient Boosting | ~1.20 | ~0.91 | ~0.98 |
+| Random Forest | ~1.35 | ~1.02 | ~0.97 |
+| Ridge Regression | ~1.89 | ~1.48 | ~0.95 |
+| SVR | ~1.95 | ~1.51 | ~0.94 |
+| Lasso | ~2.01 | ~1.57 | ~0.94 |
+
+## Tech Stack
+
+`Python` `scikit-learn` `pandas` `numpy` `MLflow` `matplotlib` `seaborn`
